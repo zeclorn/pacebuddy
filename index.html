@@ -38,13 +38,13 @@
         </label>
 
         <label class="pace-form__label" for="time">
-          Time (mm:ss)
+          Time (mm:ss or hh:mm:ss)
           <input
             class="pace-form__input"
             type="text"
             id="time"
-            pattern="^\\d{1,2}:\\d{2}$"
-            placeholder="e.g. 23:45"
+            inputmode="numeric"
+            placeholder="e.g. 23:45 or 1:05:30"
             required
           />
         </label>
@@ -55,6 +55,7 @@
       <section class="pace-result" id="pace-result" aria-live="polite"></section>
     </main>
 
+    <script src="pace-utils.js"></script>
     <script src="script.js"></script>
   </body>
 </html>
