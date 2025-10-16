@@ -1,0 +1,13 @@
+{
+  "name": "pacebuddy",
+  "version": "1.0.0",
+  "description": "Utility helpers and tests for the Pace Buddy web app.",
+  "main": "script.js",
+  "scripts": {
+    "test": "node tests/pacebuddy-100m-30s.test.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}

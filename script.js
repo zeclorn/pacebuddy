@@ -5,12 +5,16 @@ const resultContainer = document.getElementById("pace-result");
 const themeToggle = document.getElementById("theme-toggle");
 const body = document.body;
 
-const METERS_PER_MILE = 1609.34;
 const THEME_KEY = "pace-buddy-theme";
 const THEMES = {
   DARK: "theme-dark",
   LIGHT: "theme-light",
 };
+
+const paceUtils =
+  (typeof window !== "undefined" && window.PaceBuddy) || undefined;
+
+const calculatePace = paceUtils ? paceUtils.calculatePace : undefined;
 
 const getStoredTheme = () => {
   try {
@@ -64,13 +68,6 @@ if (themeToggle) {
   applyTheme(THEMES.DARK);
 }
 
-const formatPace = (secondsPerMile) => {
-  const totalSeconds = Math.round(secondsPerMile);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-};
-
 const renderResult = (content) => {
   resultContainer.innerHTML = "";
   resultContainer.appendChild(content);
@@ -99,44 +96,22 @@ const showError = (message) => {
   renderResult(error);
 };
 
-const parseTime = (value) => {
-  const [minutes, seconds] = value.split(":").map(Number);
-  if (Number.isNaN(minutes) || Number.isNaN(seconds)) {
-    return null;
-  }
-  if (seconds >= 60) {
-    return null;
-  }
-  return minutes * 60 + seconds;
-};
-
 form.addEventListener("submit", (event) => {
   event.preventDefault();
 
-  const distance = Number(distanceInput.value);
-  const timeValue = timeInput.value.trim();
-  const totalSeconds = parseTime(timeValue);
-
-  if (!Number.isFinite(distance) || distance <= 0) {
-    showError("Please enter a distance greater than 0 meters.");
+  if (typeof calculatePace !== "function") {
+    showError("Pace calculations are unavailable right now. Please try again later.");
     return;
   }
 
-  if (totalSeconds === null || totalSeconds <= 0) {
-    showError("Please enter a valid time in the format mm:ss (seconds under 60).");
+  const distance = distanceInput.value;
+  const timeValue = timeInput.value;
+  const result = calculatePace(distance, timeValue);
+
+  if (result.error) {
+    showError(result.error);
     return;
   }
 
-  const miles = distance / METERS_PER_MILE;
-  if (miles === 0) {
-    showError("Distance must convert to at least a fraction of a mile.");
-    return;
-  }
-
-  const secondsPerMile = totalSeconds / miles;
-  const formattedPace = formatPace(secondsPerMile);
-
-  const stats = `Based on ${distance.toLocaleString()} meters in ${timeValue}, you ran ${miles.toFixed(2)} miles.`;
-
-  showPace(formattedPace, stats);
+  showPace(result.pace, result.stats);
 });
