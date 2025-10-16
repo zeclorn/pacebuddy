@@ -1,9 +1,10 @@
-const form = document.getElementById("pace-form");
-const distanceInput = document.getElementById("distance");
-const timeInput = document.getElementById("time");
-const resultContainer = document.getElementById("pace-result");
-const themeToggle = document.getElementById("theme-toggle");
-const body = document.body;
+const doc = typeof document !== "undefined" ? document : null;
+const form = doc ? doc.getElementById("pace-form") : null;
+const distanceInput = doc ? doc.getElementById("distance") : null;
+const timeInput = doc ? doc.getElementById("time") : null;
+const resultContainer = doc ? doc.getElementById("pace-result") : null;
+const themeToggle = doc ? doc.getElementById("theme-toggle") : null;
+const body = doc ? doc.body : null;
 
 const THEME_KEY = "pace-buddy-theme";
 const THEMES = {
@@ -40,6 +41,7 @@ const updateToggleLabel = (theme) => {
 };
 
 const applyTheme = (theme) => {
+  if (!body) return;
   body.classList.remove(THEMES.DARK, THEMES.LIGHT);
   body.classList.add(theme);
   updateToggleLabel(theme);
@@ -58,6 +60,7 @@ if (themeToggle) {
   initializeTheme();
 
   themeToggle.addEventListener("click", () => {
+    if (!body) return;
     const nextTheme = body.classList.contains(THEMES.DARK)
       ? THEMES.LIGHT
       : THEMES.DARK;
@@ -68,21 +71,77 @@ if (themeToggle) {
   applyTheme(THEMES.DARK);
 }
 
+const COMPACT_TIME_PATTERN = /^\d+$/;
+
+const formatCompactTime = (value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed || trimmed.includes(":")) {
+    return trimmed;
+  }
+
+  if (!COMPACT_TIME_PATTERN.test(trimmed)) {
+    return trimmed;
+  }
+
+  if (trimmed.length <= 2) {
+    return trimmed;
+  }
+
+  if (trimmed.length <= 4) {
+    const minutesPart = trimmed.slice(0, -2);
+    const secondsPart = trimmed.slice(-2);
+    const minutes = String(Number(minutesPart));
+    const seconds = secondsPart.padStart(2, "0");
+    return `${minutes}:${seconds}`;
+  }
+
+  if (trimmed.length <= 6) {
+    const hoursPart = trimmed.slice(0, -4);
+    const minutesPart = trimmed.slice(-4, -2);
+    const secondsPart = trimmed.slice(-2);
+    const hours = String(Number(hoursPart));
+    const minutes = minutesPart.padStart(2, "0");
+    const seconds = secondsPart.padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  }
+
+  return trimmed;
+};
+
+const normalizeTimeInput = () => {
+  if (!timeInput) return "";
+  const formatted = formatCompactTime(timeInput.value);
+  if (formatted !== timeInput.value) {
+    timeInput.value = formatted;
+  }
+  return formatted;
+};
+
+if (timeInput) {
+  timeInput.addEventListener("blur", normalizeTimeInput);
+}
+
 const renderResult = (content) => {
+  if (!resultContainer) return;
   resultContainer.innerHTML = "";
   resultContainer.appendChild(content);
 };
 
 const showPace = (pace, stats) => {
-  const paceValue = document.createElement("div");
+  if (!doc) return;
+  const paceValue = doc.createElement("div");
   paceValue.className = "pace-result__value";
   paceValue.textContent = `${pace} / mile`;
 
-  const meta = document.createElement("p");
+  const meta = doc.createElement("p");
   meta.className = "pace-result__meta";
   meta.innerHTML = stats;
 
-  const fragment = document.createDocumentFragment();
+  const fragment = doc.createDocumentFragment();
   fragment.appendChild(paceValue);
   fragment.appendChild(meta);
 
@@ -90,28 +149,39 @@ const showPace = (pace, stats) => {
 };
 
 const showError = (message) => {
-  const error = document.createElement("div");
+  if (!doc) return;
+  const error = doc.createElement("div");
   error.className = "pace-result__error";
   error.textContent = message;
   renderResult(error);
 };
 
-form.addEventListener("submit", (event) => {
-  event.preventDefault();
+if (form) {
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
 
-  if (typeof calculatePace !== "function") {
-    showError("Pace calculations are unavailable right now. Please try again later.");
-    return;
-  }
+    if (typeof calculatePace !== "function") {
+      showError(
+        "Pace calculations are unavailable right now. Please try again later."
+      );
+      return;
+    }
 
-  const distance = distanceInput.value;
-  const timeValue = timeInput.value;
-  const result = calculatePace(distance, timeValue);
+    const distance = distanceInput.value;
+    const timeValue = normalizeTimeInput();
+    const result = calculatePace(distance, timeValue);
 
-  if (result.error) {
-    showError(result.error);
-    return;
-  }
+    if (result.error) {
+      showError(result.error);
+      return;
+    }
 
-  showPace(result.pace, result.stats);
-});
+    showPace(result.pace, result.stats);
+  });
+}
+
+if (typeof module === "object" && module.exports) {
+  module.exports = {
+    formatCompactTime,
+  };
+}
