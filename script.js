@@ -5,6 +5,12 @@ const timeInput = doc ? doc.getElementById("time") : null;
 const resultContainer = doc ? doc.getElementById("pace-result") : null;
 const themeToggle = doc ? doc.getElementById("theme-toggle") : null;
 const body = doc ? doc.body : null;
+const distanceGuideToggle = doc
+  ? doc.getElementById("distance-guide-toggle")
+  : null;
+const distanceGuideContent = doc
+  ? doc.getElementById("distance-guide-content")
+  : null;
 
 const THEME_KEY = "pace-buddy-theme";
 const THEMES = {
@@ -69,6 +75,27 @@ if (themeToggle) {
   });
 } else {
   applyTheme(THEMES.DARK);
+}
+
+const setGuideVisibility = (isVisible) => {
+  if (!distanceGuideToggle || !distanceGuideContent) {
+    return;
+  }
+
+  distanceGuideContent.hidden = !isVisible;
+  distanceGuideToggle.setAttribute("aria-expanded", String(isVisible));
+  distanceGuideToggle.textContent = isVisible
+    ? "Hide Distance Reference"
+    : "Quick Distance Reference";
+};
+
+if (distanceGuideToggle && distanceGuideContent) {
+  setGuideVisibility(false);
+
+  distanceGuideToggle.addEventListener("click", () => {
+    const willShow = distanceGuideContent.hidden;
+    setGuideVisibility(willShow);
+  });
 }
 
 const COMPACT_TIME_PATTERN = /^\d+$/;

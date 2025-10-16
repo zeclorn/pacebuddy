@@ -23,6 +23,63 @@
         </p>
       </header>
 
+      <section class="distance-guide" aria-labelledby="distance-guide-title">
+        <div class="distance-guide__header">
+          <h2 class="distance-guide__title" id="distance-guide-title">
+            Distance Guide
+          </h2>
+          <button
+            class="distance-guide__toggle"
+            type="button"
+            id="distance-guide-toggle"
+            aria-expanded="false"
+            aria-controls="distance-guide-content"
+          >
+            Quick Distance Reference
+          </button>
+        </div>
+        <div class="distance-guide__content" id="distance-guide-content" hidden>
+          <p class="distance-guide__description">
+            Select a distance from the table and type its meters value into the
+            calculator.
+          </p>
+          <table class="distance-guide__table">
+            <thead>
+              <tr>
+                <th scope="col">Event</th>
+                <th scope="col">Meters</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Quarter Track Lap</td>
+                <td>100</td>
+              </tr>
+              <tr>
+                <td>1 Mile</td>
+                <td>1,609</td>
+              </tr>
+              <tr>
+                <td>5K</td>
+                <td>5,000</td>
+              </tr>
+              <tr>
+                <td>10K</td>
+                <td>10,000</td>
+              </tr>
+              <tr>
+                <td>Half Marathon</td>
+                <td>21,097</td>
+              </tr>
+              <tr>
+                <td>Marathon</td>
+                <td>42,195</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <form class="pace-form" id="pace-form">
         <label class="pace-form__label" for="distance">
           Distance (meters)
