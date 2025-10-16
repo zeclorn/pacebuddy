@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pace Buddy</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="theme-dark">
+    <main class="app">
+      <header class="app__header">
+        <button
+          class="theme-toggle"
+          type="button"
+          id="theme-toggle"
+          aria-pressed="true"
+        >
+          Light Mode
+        </button>
+        <h1 class="app__title">Pace Buddy</h1>
+        <p class="app__subtitle">
+          Enter your run distance and time to find your pace per mile.
+        </p>
+      </header>
+
+      <form class="pace-form" id="pace-form">
+        <label class="pace-form__label" for="distance">
+          Distance (meters)
+          <input
+            class="pace-form__input"
+            type="number"
+            id="distance"
+            min="1"
+            step="1"
+            placeholder="e.g. 5000"
+            required
+          />
+        </label>
+
+        <label class="pace-form__label" for="time">
+          Time (mm:ss)
+          <input
+            class="pace-form__input"
+            type="text"
+            id="time"
+            pattern="^\\d{1,2}:\\d{2}$"
+            placeholder="e.g. 23:45"
+            required
+          />
+        </label>
+
+        <button class="pace-form__button" type="submit">Calculate Pace</button>
+      </form>
+
+      <section class="pace-result" id="pace-result" aria-live="polite"></section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
