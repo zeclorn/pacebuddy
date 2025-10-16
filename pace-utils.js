@@ -35,6 +35,14 @@
         return null;
       }
 
+      if (segments.length === 1) {
+        const [seconds] = segments;
+        if (seconds < 0 || seconds >= 60) {
+          return null;
+        }
+        return seconds;
+      }
+
       if (segments.length === 2) {
         const [minutes, seconds] = segments;
         if (seconds >= 60 || minutes < 0 || seconds < 0) {
@@ -72,7 +80,7 @@
       if (totalSeconds === null || totalSeconds <= 0) {
         return {
           error:
-            "Please enter a valid time in the format mm:ss or hh:mm:ss with seconds under 60.",
+            "Please enter a valid time in the format ss, mm:ss, or hh:mm:ss with seconds under 60.",
         };
       }
 
