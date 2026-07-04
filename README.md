@@ -5,7 +5,7 @@ Pace Buddy is a lightweight single-page web app that helps runners convert a rac
 ## Features
 
 - **Flexible distance input** – Enter distance in meters, kilometers, or miles. Your unit choice is remembered between visits.
-- **Flexible time parsing** – Enter your finish time as `ss`, `mm:ss`, or `hh:mm:ss`. Bare seconds can exceed 60 (handy for track intervals), while minutes and seconds in the longer formats are validated to stay below 60.
+- **Phone-friendly time entry** – Finish time is entered in separate hours, minutes, and seconds fields, so the numeric keypad on mobile is all you need (no colon required). Leave fields blank to treat them as zero; minutes and seconds are validated to stay below 60.
 - **Compact time auto-formatting** – Typing a continuous string of digits (for example `1234`) automatically reformats to a readable `12:34` when the input loses focus.
 - **Live results** – The pace updates as you type once both fields are valid; the Calculate button still works and surfaces validation errors.
 - **Dual-unit pace** – Results show both min/mile and min/km, plus a summary of the distance and time that produced them.
