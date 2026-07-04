@@ -120,6 +120,17 @@ body {
     color var(--transition-speed) ease;
 }
 
+.pace-form__distance-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+.pace-form__select {
+  cursor: pointer;
+  min-width: 6.5rem;
+}
+
 .pace-form__input:focus {
   outline: none;
   border-color: var(--primary-color);
@@ -258,6 +269,10 @@ body {
   border-top: 1px solid var(--surface-border);
 }
 
+.distance-guide__table tbody tr {
+  cursor: pointer;
+}
+
 .distance-guide__table tbody tr:hover {
   background: rgba(122, 162, 255, 0.08);
 }
@@ -266,10 +281,45 @@ body {
   background: rgba(0, 74, 173, 0.08);
 }
 
+.distance-guide__fill {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: var(--primary-color);
+  cursor: pointer;
+  text-align: left;
+}
+
+.distance-guide__fill:hover,
+.distance-guide__fill:focus {
+  text-decoration: underline;
+}
+
+.distance-guide__fill:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.distance-guide__row--selected {
+  background: rgba(122, 162, 255, 0.18);
+}
+
+.theme-light .distance-guide__row--selected {
+  background: rgba(0, 74, 173, 0.15);
+}
+
 .pace-result__value {
   font-size: 1.8rem;
   font-weight: 700;
   color: var(--accent-color);
+}
+
+.pace-result__value--secondary {
+  font-size: 1.25rem;
+  opacity: 0.85;
 }
 
 .pace-result__meta {
