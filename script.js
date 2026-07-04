@@ -1,7 +1,9 @@
 const form = document.getElementById("pace-form");
 const distanceInput = document.getElementById("distance");
 const unitSelect = document.getElementById("distance-unit");
-const timeInput = document.getElementById("time");
+const hoursInput = document.getElementById("time-hours");
+const minutesInput = document.getElementById("time-minutes");
+const secondsInput = document.getElementById("time-seconds");
 const resultContainer = document.getElementById("pace-result");
 const themeToggle = document.getElementById("theme-toggle");
 const distanceGuideToggle = document.getElementById("distance-guide-toggle");
@@ -90,15 +92,29 @@ const initializeUnit = () => {
 
 initializeUnit();
 
-const normalizeTimeInput = () => {
-  if (!paceUtils) {
-    return timeInput.value;
+const TIME_FIELDS = [
+  { input: hoursInput, max: Infinity },
+  { input: minutesInput, max: 59 },
+  { input: secondsInput, max: 59 },
+];
+
+const readTimeSeconds = () => {
+  if (TIME_FIELDS.every(({ input }) => !input.value.trim())) {
+    return { empty: true };
   }
-  const formatted = paceUtils.formatCompactTime(timeInput.value);
-  if (formatted !== timeInput.value) {
-    timeInput.value = formatted;
+
+  const values = [];
+  for (const { input, max } of TIME_FIELDS) {
+    const raw = input.value.trim();
+    const value = raw ? Number(raw) : 0;
+    if (!Number.isInteger(value) || value < 0 || value > max) {
+      return { invalid: true };
+    }
+    values.push(value);
   }
-  return formatted;
+
+  const [hours, minutes, seconds] = values;
+  return { seconds: hours * 3600 + minutes * 60 + seconds };
 };
 
 const clearResult = () => {
@@ -141,14 +157,20 @@ const updateLiveResult = () => {
     return;
   }
 
-  if (!distanceInput.value.trim() || !timeInput.value.trim()) {
+  const time = readTimeSeconds();
+  if (
+    !distanceInput.value.trim() ||
+    time.empty ||
+    time.invalid ||
+    time.seconds <= 0
+  ) {
     clearResult();
     return;
   }
 
   const result = paceUtils.calculatePace(
     distanceInput.value,
-    timeInput.value,
+    String(time.seconds),
     unitSelect.value
   );
 
@@ -162,11 +184,8 @@ const updateLiveResult = () => {
 };
 
 distanceInput.addEventListener("input", updateLiveResult);
-timeInput.addEventListener("input", updateLiveResult);
-
-timeInput.addEventListener("blur", () => {
-  normalizeTimeInput();
-  updateLiveResult();
+TIME_FIELDS.forEach(({ input }) => {
+  input.addEventListener("input", updateLiveResult);
 });
 
 unitSelect.addEventListener("change", () => {
@@ -213,9 +232,17 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
+  const time = readTimeSeconds();
+  if (time.empty || time.invalid || time.seconds <= 0) {
+    showError(
+      "Please enter a time greater than 0. Minutes and seconds must be whole numbers between 0 and 59."
+    );
+    return;
+  }
+
   const result = paceUtils.calculatePace(
     distanceInput.value,
-    normalizeTimeInput(),
+    String(time.seconds),
     unitSelect.value
   );
 

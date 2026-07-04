@@ -131,6 +131,31 @@ body {
   min-width: 6.5rem;
 }
 
+.pace-form__time-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.pace-form__time-input {
+  min-width: 0;
+  text-align: center;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.pace-form__time-input::-webkit-outer-spin-button,
+.pace-form__time-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.pace-form__time-separator {
+  font-weight: 700;
+  color: var(--muted-text);
+}
+
 .pace-form__input:focus {
   outline: none;
   border-color: var(--primary-color);

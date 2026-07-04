@@ -150,17 +150,45 @@
           </span>
         </label>
 
-        <label class="pace-form__label" for="time">
-          Time (ss or mm:ss or hh:mm:ss)
-          <input
-            class="pace-form__input"
-            type="text"
-            id="time"
-            inputmode="numeric"
-            placeholder="e.g. 25 or 23:45 or 1:05:30"
-            required
-          />
-        </label>
+        <div class="pace-form__label" role="group" aria-labelledby="time-label">
+          <span id="time-label">Time</span>
+          <span class="pace-form__time-row">
+            <input
+              class="pace-form__input pace-form__time-input"
+              type="number"
+              id="time-hours"
+              inputmode="numeric"
+              min="0"
+              step="1"
+              placeholder="hh"
+              aria-label="Hours"
+            />
+            <span class="pace-form__time-separator" aria-hidden="true">:</span>
+            <input
+              class="pace-form__input pace-form__time-input"
+              type="number"
+              id="time-minutes"
+              inputmode="numeric"
+              min="0"
+              max="59"
+              step="1"
+              placeholder="mm"
+              aria-label="Minutes"
+            />
+            <span class="pace-form__time-separator" aria-hidden="true">:</span>
+            <input
+              class="pace-form__input pace-form__time-input"
+              type="number"
+              id="time-seconds"
+              inputmode="numeric"
+              min="0"
+              max="59"
+              step="1"
+              placeholder="ss"
+              aria-label="Seconds"
+            />
+          </span>
+        </div>
 
         <button class="pace-form__button" type="submit">Calculate Pace</button>
       </form>
